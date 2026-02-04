@@ -147,7 +147,7 @@ impl BlackBlazeB2 {
         })
     }
 
-    pub async fn upload_image(
+    pub async fn upload_file(
         &self,
         data: axum::body::Bytes,
         filename: &str,
@@ -195,7 +195,7 @@ impl BlackBlazeB2 {
         Ok(format!("{}/{}", self.public_url, filename))
     }
 
-    pub async fn delete_image(&self, filename: &str) -> Result<(), AppError> {
+    pub async fn delete_file(&self, filename: &str) -> Result<(), AppError> {
         let auth_token = self.get_auth_token().await?;
         let api_url = self.api_url.read().await.clone();
 

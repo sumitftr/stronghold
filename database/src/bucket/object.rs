@@ -11,7 +11,7 @@ impl crate::Db {
         // checking if the user sent icon is valid or not
         let content_type = util::validation::is_icon_valid(&mut filename, &data)?;
         filename = format!("icon/{_id}-{filename}");
-        self.bucket.upload_image(data, &filename, &content_type).await
+        self.bucket.upload_file(data, &filename, &content_type).await
     }
 
     pub async fn upload_banner(
@@ -23,7 +23,7 @@ impl crate::Db {
         // checking if the user sent banner is valid or not
         let content_type = util::validation::is_banner_valid(&mut filename, &data)?;
         filename = format!("banner/{_id}-{filename}");
-        self.bucket.upload_image(data, &filename, &content_type).await
+        self.bucket.upload_file(data, &filename, &content_type).await
     }
 }
 

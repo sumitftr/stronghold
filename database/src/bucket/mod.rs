@@ -1,5 +1,5 @@
 mod b2;
-mod crud;
+mod object;
 mod r2;
 
 pub use b2::BlackBlazeB2;
