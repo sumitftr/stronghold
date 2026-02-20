@@ -1,13 +1,12 @@
 use axum::http::{HeaderMap, StatusCode};
+use shared::validation::ValidationError;
 
 #[derive(PartialEq, Debug)]
 pub enum AppError {
     BadReq(&'static str),
     Unauthorized(&'static str),
     NotFound,
-    InvalidData(&'static str),
-    InvalidDataFmt(String),
-    InvalidEmailFormat,
+    Validation(ValidationError),
     InvalidOTP,
     InvalidOAuthProvider,
     UserNotFound,
@@ -32,14 +31,8 @@ impl axum::response::IntoResponse for AppError {
             Self::NotFound => {
                 (StatusCode::NOT_FOUND).into_response()
             }
-            Self::InvalidData(e) => {
-                (StatusCode::BAD_REQUEST, JsonMsg::new(e)).into_response()
-            }
-            Self::InvalidDataFmt(e) => {
-                (StatusCode::BAD_REQUEST, JsonMsg::new(&e)).into_response()
-            }
-            Self::InvalidEmailFormat => {
-                (StatusCode::BAD_REQUEST, JsonMsg::new("Invalid Email Format")).into_response()
+            Self::Validation(e) => {
+                (StatusCode::BAD_REQUEST, JsonMsg::new(&e.to_string())).into_response()
             }
             Self::InvalidOTP => {
                 (StatusCode::BAD_REQUEST, JsonMsg::new("Invalid OTP")).into_response()
@@ -81,5 +74,11 @@ impl<'a> JsonMsg<'a> {
     #[inline]
     pub fn new(error: &'a str) -> axum::Json<Self> {
         axum::Json(Self { message: error })
+    }
+}
+
+impl From<ValidationError> for AppError {
+    fn from(value: ValidationError) -> Self {
+        Self::Validation(value)
     }
 }

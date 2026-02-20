@@ -3,7 +3,6 @@ pub mod generate;
 pub mod mail;
 pub mod oauth;
 pub mod session;
-pub mod validation;
 
 pub use error::AppError;
 

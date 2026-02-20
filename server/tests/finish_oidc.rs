@@ -18,7 +18,7 @@ fn main() -> Result<(), reqwest::Error> {
     let mut token = Scanner::new(std::io::stdin().lock());
     let mut out = Printer::new();
 
-    let endpoint4 = format!("{}/api/register/finish_oidc", SOCKET);
+    let endpoint4 = format!("{}/api/register/set_username", SOCKET);
     loop {
         out.write("Enter your email: ");
         let email = token.next::<String>();

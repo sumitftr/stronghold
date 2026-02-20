@@ -1,5 +1,5 @@
 [package]
-name = "web"
+name = "shared"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,13 +8,11 @@ license.workspace = true
 readme.workspace = true
 
 [dependencies]
-server = { path = "../server" }
-
-axum = { workspace = true }
-dotenv = { workspace = true }
-tokio = { workspace = true }
+bytes = { workspace = true }
+celes = { workspace = true }
+thiserror = { workspace = true }
+time = { workspace = true }
 tracing = { workspace = true }
-tracing-subscriber = { workspace = true }
 
 [lints]
 workspace = true

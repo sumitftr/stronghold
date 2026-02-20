@@ -43,6 +43,8 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 Step 2: Run database migrations
 
+> For installation use `cargo install sqlx-cli`
+
 ```
 sqlx migrate run --source .migrations
 ```

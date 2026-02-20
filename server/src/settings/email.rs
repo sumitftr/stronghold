@@ -32,7 +32,7 @@ pub async fn update_email(
     if email == body.new_email {
         return Err(AppError::BadReq("Your new email cannot be same as of your original email"));
     }
-    util::validation::is_email_valid(&body.new_email)?;
+    shared::validation::is_email_valid(&body.new_email)?;
 
     let otp = util::generate::otp(&body.new_email);
     tracing::info!("Email: {}, OTP: {}", email, otp);

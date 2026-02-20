@@ -19,8 +19,8 @@ pub async fn start(
     Json(body): Json<CreateUserRequest>,
 ) -> Result<ErasedJson, AppError> {
     // validating user sent data
-    util::validation::is_display_name_valid(&body.name)?;
-    util::validation::is_email_valid(&body.email)?;
+    shared::validation::is_display_name_valid(&body.name)?;
+    shared::validation::is_email_valid(&body.email)?;
 
     let otp = util::generate::otp(&body.email);
     tracing::info!("Email: {}, OTP: {}", body.email, otp);
@@ -105,7 +105,7 @@ pub async fn set_password(
     State(db): State<Arc<Db>>,
     Json(body): Json<SetPasswordRequest>,
 ) -> Result<ErasedJson, AppError> {
-    util::validation::is_password_strong(&body.password)?;
+    shared::validation::is_password_strong(&body.password)?;
 
     db.set_registrant_password(&body.email, body.password).await?;
 
@@ -126,37 +126,10 @@ pub async fn set_username(
     headers: HeaderMap,
     Json(body): Json<SetUsernameRequest>,
 ) -> Result<impl IntoResponse, AppError> {
-    util::validation::is_username_valid(&body.username)?;
+    shared::validation::is_username_valid(&body.username)?;
 
     // registering user to primary database
     let user = db.set_registrant_username(body.email, body.username).await?;
-
-    let (new_session, _, set_cookie_headermap) =
-        util::session::create_session(user.id, &headers, *conn_info);
-
-    let res_body = crate::user_data::arrange(&user, &vec![&new_session]);
-    db.add_session(user.id, new_session.clone()).await?;
-    db.make_user_active(user, new_session);
-
-    Ok((StatusCode::CREATED, set_cookie_headermap, res_body))
-}
-
-#[derive(serde::Deserialize)]
-pub struct FinishOidcRequest {
-    email: String,
-    username: String,
-}
-
-pub async fn finish_oidc(
-    State(db): State<Arc<Db>>,
-    ConnectInfo(conn_info): ConnectInfo<ClientSocket>,
-    headers: HeaderMap,
-    Json(body): Json<FinishOidcRequest>,
-) -> Result<impl IntoResponse, AppError> {
-    util::validation::is_username_valid(&body.username)?;
-
-    // registering user to primary database
-    let user = db.finish_oidc_application(body.email, body.username).await?;
 
     let (new_session, _, set_cookie_headermap) =
         util::session::create_session(user.id, &headers, *conn_info);

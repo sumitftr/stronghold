@@ -3,6 +3,7 @@ use lettre::{
     AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor, message::Mailbox,
     transport::smtp::authentication::Credentials,
 };
+use shared::validation::ValidationError;
 use std::sync::LazyLock;
 
 // this is initialized in this static to not drop the connection after each mail send
@@ -26,7 +27,9 @@ static NOREPLY_EMAIL: LazyLock<Mailbox> =
 pub async fn send(to_email: String, subject: String, body: String) -> Result<(), AppError> {
     let msg: Message = Message::builder()
         .from(NOREPLY_EMAIL.clone())
-        .to(to_email.parse().map_err(|_| AppError::InvalidEmailFormat)?)
+        .to(to_email
+            .parse()
+            .map_err(|_| AppError::Validation(ValidationError::InvalidEmailFormat))?)
         .subject(subject)
         .body(body)
         .map_err(|e| {

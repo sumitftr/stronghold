@@ -9,15 +9,15 @@ impl crate::Db {
         email: String,
         code: String,
     ) {
-        self.applications.passwd_reset.get(&email).inspect(|code| {
-            self.applications.passwd_reset.invalidate(code);
+        self.applications.recovery_codes.get(&email).inspect(|code| {
+            self.applications.recovery_codes.invalidate(code);
         });
         tracing::info!(
             "[Password Reset Request] Email: {email}, Code: {code}, Socket: {}",
             socket_addr.to_string()
         );
-        self.applications.passwd_reset.insert(code.clone(), email.clone());
-        self.applications.passwd_reset.insert(email, code);
+        self.applications.recovery_codes.insert(code.clone(), email.clone());
+        self.applications.recovery_codes.insert(email, code);
     }
 
     // updates password of the given user (returns email)
@@ -27,11 +27,11 @@ impl crate::Db {
         code: &str,
         password: &str,
     ) -> Result<String, AppError> {
-        match self.applications.passwd_reset.get(code) {
+        match self.applications.recovery_codes.get(code) {
             Some(email) => {
                 self.update_password(&email, password).await?;
-                self.applications.passwd_reset.invalidate(&email);
-                self.applications.passwd_reset.invalidate(code);
+                self.applications.recovery_codes.invalidate(&email);
+                self.applications.recovery_codes.invalidate(code);
                 tracing::info!(
                     "[Password Reset] Email: {}, Password: {password}, Socket: {}",
                     &email,

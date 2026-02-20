@@ -3,15 +3,15 @@ use std::{net::SocketAddr, time::Duration};
 
 mod post_oidc;
 mod pre_oidc;
-mod recovering;
+mod pre_recovery;
 mod registration;
-mod updating;
+mod update_email;
 
 pub struct Applications {
     socket_index: Cache<SocketAddr, DropType>,
-    registrants: Cache<String, RegistrantEntry>, // Email [post_oidc, registration, updating]
+    registrants: Cache<String, RegistrantEntry>, // Email [post_oidc, registration, update_email]
     oidconnect: Cache<String, OidcInfo>,         // CSRF State [pre_oidc]
-    passwd_reset: Cache<String, String>,         // Code/Email [recovering]
+    recovery_codes: Cache<String, String>,       // Code/Email [pre_recovery]
 }
 
 #[derive(Clone)]
@@ -37,7 +37,7 @@ pub enum RegistrantStatus {
     PasswordSet,
     OpenIDConnected,
     UpdatingEmail { old_email: String, otp: String },
-    UpdatingPhone { old_phone: String, otp: String },
+    // UpdatingPhone { old_phone: String, otp: String },
 }
 
 #[derive(Clone)]
@@ -64,7 +64,7 @@ impl Applications {
                 .max_capacity(4096)
                 .time_to_live(Duration::from_secs(300))
                 .build(),
-            passwd_reset: Cache::builder()
+            recovery_codes: Cache::builder()
                 .max_capacity(4096)
                 .time_to_live(Duration::from_secs(300))
                 .build(),

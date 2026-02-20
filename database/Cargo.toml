@@ -8,6 +8,7 @@ license.workspace = true
 readme.workspace = true
 
 [dependencies]
+shared = { path = "../shared" }
 util = { path = "../util" }
 
 axum = { workspace = true }

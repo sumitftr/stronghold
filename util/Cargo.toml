@@ -8,10 +8,11 @@ license.workspace = true
 readme.workspace = true
 
 [dependencies]
+shared = { path = "../shared"}
+
 axum = { workspace = true }
 base64 = { workspace = true }
 const-hex = { workspace = true }
-celes = { workspace = true }
 hmac = { workspace = true }
 lettre = { workspace = true }
 rand = { workspace = true }

@@ -1,21 +1,21 @@
-use crate::AppError;
+use super::ValidationError;
 
-pub fn is_email_valid(s: &str) -> Result<(), AppError> {
+pub fn is_email_valid(s: &str) -> Result<(), ValidationError> {
     let mut it = s.split('@');
     let Some(local_part) = it.next() else {
-        return Err(AppError::InvalidEmailFormat);
+        return Err(ValidationError::InvalidEmailFormat);
     };
     let Some(domain) = it.next() else {
-        return Err(AppError::InvalidEmailFormat);
+        return Err(ValidationError::InvalidEmailFormat);
     };
     if it.next().is_some() {
-        return Err(AppError::InvalidEmailFormat);
+        return Err(ValidationError::InvalidEmailFormat);
     }
 
     if is_local_part_valid(local_part) && is_domain_valid(domain) {
         Ok(())
     } else {
-        Err(AppError::InvalidEmailFormat)
+        Err(ValidationError::InvalidEmailFormat)
     }
 }
 
@@ -78,25 +78,31 @@ fn is_domain_valid(domain: &str) -> bool {
     true
 }
 
-pub fn is_username_valid(s: &str) -> Result<(), AppError> {
+pub fn is_username_valid(s: &str) -> Result<(), ValidationError> {
     if s.len() < 6 || s.len() > 20 {
-        return Err(AppError::InvalidData("Username should be between 6 and 20 characters"));
+        return Err(ValidationError::InvalidUsername(
+            "Username should be between 6 and 20 characters".to_string(),
+        ));
     }
     if !s.chars().next().unwrap().is_ascii_lowercase() {
-        return Err(AppError::InvalidData(
-            "Username should start with a lowercase alphabetic character",
+        return Err(ValidationError::InvalidUsername(
+            "Username should start with a lowercase alphabetic character".to_string(),
         ));
     }
     if !s.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '.') {
-        return Err(AppError::InvalidData(
-            "Only lowercase alphabets, digits and periods are allowed",
+        return Err(ValidationError::InvalidUsername(
+            "Only lowercase alphabets, digits and periods are allowed".to_string(),
         ));
     }
     if s.contains("..") {
-        return Err(AppError::InvalidData("Username can't contain more than one period together"));
+        return Err(ValidationError::InvalidUsername(
+            "Username can't contain more than one period together".to_string(),
+        ));
     }
     if s.ends_with('.') {
-        return Err(AppError::InvalidData("Username can't be ended with a period"));
+        return Err(ValidationError::InvalidUsername(
+            "Username can't be ended with a period".to_string(),
+        ));
     }
     Ok(())
 }

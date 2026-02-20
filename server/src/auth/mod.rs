@@ -17,7 +17,6 @@ pub async fn auth_routes() -> axum::Router {
         .route("/api/reset_password", post(recovery::reset_password))
         .route("/api/oauth2/login", get(oidc::login)) // change to post
         .route("/api/oauth2/callback", get(oidc::callback)) // change to post
-        .route("/api/register/finish_oidc", post(register::finish_oidc))
         .route("/api/register", post(register::start))
         .route("/api/register/resend_otp", post(register::resend_otp))
         .route("/api/register/verify_email", post(register::verify_email))

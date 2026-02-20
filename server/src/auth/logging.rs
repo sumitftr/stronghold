@@ -91,7 +91,7 @@ pub async fn logout_devices(
     for device in body.sessions {
         let uid = match uuid::Uuid::try_from(device) {
             Ok(v) => v,
-            Err(_) => return Err(AppError::InvalidData("Invalid Session found")),
+            Err(_) => return Err(AppError::BadReq("Invalid Session found")),
         };
         if uid != parsed_session.unsigned_ssid {
             mapped_unsigned_ssids.push(uid);

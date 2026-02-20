@@ -9,6 +9,7 @@ readme.workspace = true
 
 [dependencies]
 database = { path = "../database" }
+shared = { path = "../shared" }
 util = { path = "../util" }
 
 axum = { workspace = true }

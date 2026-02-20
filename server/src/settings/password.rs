@@ -22,7 +22,7 @@ pub async fn update_password(
         }
         guard.0.email.clone()
     };
-    util::validation::is_password_strong(&body.new_password)?;
+    shared::validation::is_password_strong(&body.new_password)?;
     db.update_password(&email, &body.new_password).await?;
     user.lock().unwrap().0.password = Some(body.new_password);
     Ok(json!({

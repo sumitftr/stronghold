@@ -1,6 +1,7 @@
 use axum::{Extension, Json, extract::State};
 use axum_extra::{json, response::ErasedJson};
 use database::{Db, UserData};
+use shared::validation::ValidationError;
 use std::sync::Arc;
 use util::AppError;
 
@@ -14,7 +15,7 @@ pub async fn update_legal_name(
     Extension(user): Extension<UserData>,
     Json(body): Json<UpdateLegalNameRequest>,
 ) -> Result<ErasedJson, AppError> {
-    util::validation::is_legal_name_valid(&body.legal_name)?;
+    shared::validation::is_legal_name_valid(&body.legal_name)?;
     let username = user.lock().unwrap().0.username.clone();
     db.update_legal_name(&username, &body.legal_name).await?;
     user.lock().unwrap().0.legal_name = Some(body.legal_name.clone());
@@ -41,8 +42,9 @@ pub async fn update_birth_date(
 ) -> Result<ErasedJson, AppError> {
     let offset =
         time::UtcOffset::from_hms(body.offset_hours, body.offset_minutes, body.offset_seconds)
-            .map_err(|_| AppError::InvalidData("Invalid UTC Offset"))?;
-    let birth_date = util::validation::is_birth_date_valid(body.year, body.month, body.day, offset)?;
+            .map_err(|_| AppError::Validation(ValidationError::InvalidUtcOffset))?;
+    let birth_date =
+        shared::validation::is_birth_date_valid(body.year, body.month, body.day, offset)?;
     let username = user.lock().unwrap().0.username.clone();
     db.update_birth_date(&username, birth_date).await?;
     user.lock().unwrap().0.birth_date = Some(birth_date);
@@ -62,7 +64,7 @@ pub async fn update_gender(
     Extension(user): Extension<UserData>,
     Json(body): Json<UpdateGenderRequest>,
 ) -> Result<ErasedJson, AppError> {
-    util::validation::is_gender_valid(&body.gender)?;
+    shared::validation::is_gender_valid(&body.gender)?;
     let username = user.lock().unwrap().0.username.clone();
     db.update_gender(&username, &body.gender).await?;
     user.lock().unwrap().0.gender = Some(body.gender.clone());
@@ -82,7 +84,7 @@ pub async fn update_country(
     Extension(user): Extension<UserData>,
     Json(body): Json<UpdateCountryRequest>,
 ) -> Result<ErasedJson, AppError> {
-    let country = util::validation::is_country_valid(&body.country)?;
+    let country = shared::validation::is_country_valid(&body.country)?;
     let username = user.lock().unwrap().0.username.clone();
     db.update_country(&username, &country).await?;
     user.lock().unwrap().0.country = Some(country.clone());

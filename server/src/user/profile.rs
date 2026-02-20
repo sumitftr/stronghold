@@ -4,6 +4,7 @@ use axum::{
 };
 use axum_extra::{json, response::ErasedJson};
 use database::{Db, users::User};
+use shared::validation::ValidationError;
 use std::sync::{Arc, Mutex};
 use util::AppError;
 
@@ -52,20 +53,22 @@ pub async fn update_profile(
     // Parse multipart form data
     while let Some(field) = multipart.next_field().await.map_err(|e| {
         tracing::error!("Invalid multipart/form-data field: {e:?}");
-        AppError::InvalidData("Failed to read multipart field")
+        ValidationError::InvalidData("Failed to read multipart field".to_string())
     })? {
-        let name = field.name().ok_or_else(|| AppError::InvalidData("Field has no name"))?;
+        let name = field
+            .name()
+            .ok_or_else(|| ValidationError::InvalidData("Field has no name".to_string()))?;
 
         match name {
             "banner" => {
                 let filename = field
                     .file_name()
-                    .ok_or_else(|| AppError::InvalidData("No filename provided"))?
+                    .ok_or_else(|| ValidationError::InvalidData("No filename provided".to_string()))?
                     .to_string();
 
                 let data = field.bytes().await.map_err(|e| {
                     tracing::error!("Invalid multipart/form-data field body: {e:?}");
-                    AppError::InvalidData("Failed to read image")
+                    ValidationError::InvalidData("Failed to read image".to_string())
                 })?;
 
                 banner = Some(db.upload_banner(data, filename, &_id).await?);
@@ -73,12 +76,12 @@ pub async fn update_profile(
             "icon" => {
                 let filename = field
                     .file_name()
-                    .ok_or_else(|| AppError::InvalidData("No filename provided"))?
+                    .ok_or_else(|| ValidationError::InvalidData("No filename provided".to_string()))?
                     .to_string();
 
                 let data = field.bytes().await.map_err(|e| {
                     tracing::error!("Invalid multipart/form-data field body: {e:?}");
-                    AppError::InvalidData("Failed to read image")
+                    ValidationError::InvalidData("Failed to read image".to_string())
                 })?;
 
                 icon = Some(db.upload_icon(data, filename, &_id).await?);
@@ -86,20 +89,20 @@ pub async fn update_profile(
             "display_name" => {
                 let text = field.text().await.map_err(|e| {
                     tracing::error!("Invalid multipart/form-data field body: {e:?}");
-                    AppError::InvalidData("Failed to read name")
+                    ValidationError::InvalidData("Failed to read name".to_string())
                 })?;
 
-                util::validation::is_display_name_valid(&text)?;
+                shared::validation::is_display_name_valid(&text)?;
 
                 display_name = Some(text.trim().to_string());
             }
             "bio" => {
                 let text = field.text().await.map_err(|e| {
                     tracing::error!("Invalid multipart/form-data field body: {e:?}");
-                    AppError::InvalidData("Failed to read bio")
+                    ValidationError::InvalidData("Failed to read bio".to_string())
                 })?;
 
-                util::validation::is_bio_valid(&text)?;
+                shared::validation::is_bio_valid(&text)?;
 
                 bio = Some(text);
             }

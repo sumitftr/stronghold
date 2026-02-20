@@ -1,6 +1,39 @@
 mod b2;
-mod object;
 mod r2;
 
 pub use b2::BlackBlazeB2;
 pub use r2::CloudflareR2;
+
+use std::sync::Arc;
+use util::AppError;
+
+impl crate::Db {
+    pub async fn upload_icon(
+        self: &Arc<Self>,
+        data: axum::body::Bytes,
+        mut filename: String,
+        _id: &str,
+    ) -> Result<String, AppError> {
+        // checking if the user sent icon is valid or not
+        let content_type = shared::validation::is_icon_valid(&mut filename, &data)?;
+        filename = format!("icon/{_id}-{filename}");
+        self.bucket.upload_file(data, &filename, &content_type).await
+    }
+
+    pub async fn upload_banner(
+        self: &Arc<Self>,
+        data: axum::body::Bytes,
+        mut filename: String,
+        _id: &str,
+    ) -> Result<String, AppError> {
+        // checking if the user sent banner is valid or not
+        let content_type = shared::validation::is_banner_valid(&mut filename, &data)?;
+        filename = format!("banner/{_id}-{filename}");
+        self.bucket.upload_file(data, &filename, &content_type).await
+    }
+}
+
+// TODO:
+// - Use Vec<Bucket> instead of Bucket (where Bucket can be any types inside database::bucket module)
+// - Create a function that determines closest bucket region based on client's ip (crate: maxminddb)
+// - And then perform the requested operation

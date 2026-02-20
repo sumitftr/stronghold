@@ -73,29 +73,60 @@ impl crate::Db {
         }
     }
 
+    // it works for both registration and openidconnect
     pub async fn set_registrant_username(
         self: &Arc<Self>,
         email: String,
         username: String,
     ) -> Result<User, AppError> {
         self.is_username_available(&username).await?;
-        let registrant = self.applications.registrants.get(&email).ok_or(AppError::UserNotFound)?;
+        let mut registrant =
+            self.applications.registrants.get(&email).ok_or(AppError::UserNotFound)?;
+
+        let id = sqlx::types::Uuid::new_v4();
+        // creating a new object in the bucket from the cdn url
+        if registrant.icon.is_some() {
+            let cdn_icon_url = registrant.icon.unwrap();
+            // Download the image from the source URL
+            let response = reqwest::get(&cdn_icon_url).await.map_err(|e| {
+                tracing::error!("Failed to download image from {cdn_icon_url}: {e:#?}");
+                AppError::ServerError
+            })?;
+
+            if !response.status().is_success() {
+                tracing::error!(
+                    "Failed to download image from {cdn_icon_url}: status {}",
+                    response.status()
+                );
+                return Err(AppError::ServerError);
+            }
+
+            // Get the image data as bytes
+            let data = response.bytes().await.map_err(|e| {
+                tracing::error!("Failed to read image bytes from {}: {e:#?}", cdn_icon_url);
+                AppError::ServerError
+            })?;
+
+            let filename =
+                cdn_icon_url.split('/').next_back().unwrap().split('=').next().unwrap().to_owned();
+            registrant.icon = Some(self.upload_icon(data, filename, &id.to_string()).await?);
+        }
 
         let user = User {
-            id: sqlx::types::Uuid::new_v4(),
+            id,
             display_name: registrant.display_name.unwrap(),
             email,
             birth_date: None,
             password: registrant.password,
             username,
             banner: None,
-            icon: None,
+            icon: registrant.icon,
             bio: None,
             legal_name: None,
             gender: None,
             phone: None,
             country: None,
-            oauth_provider: util::oauth::OAuthProvider::None,
+            oauth_provider: registrant.oauth_provider,
             created: OffsetDateTime::now_utc(),
         };
         self.create_user_forced(&user).await;

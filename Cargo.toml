@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = [ "database", "server", "util", "web" ]
+members = [ "database", "server", "shared", "util", "web" ]
 exclude = []
 default-members = [ "web" ]
 
@@ -16,6 +16,7 @@ readme = "README.md"
 axum       = { version = "0.8", features = ["http2", "macros", "multipart", "ws"] }
 axum-extra = { version = "0.12", features = ["erased-json"] }
 base64     = { version = "0.22" }
+bytes      = { version = "1" }
 const-hex  = { version = "1.17", features = ["alloc"] }
 celes      = { version = "2" }
 dotenv     = { version = "0.15" }
@@ -28,6 +29,7 @@ serde      = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
 sha2       = { version = "0.10" }
 sqlx       = { version = "0.8", features = ["runtime-tokio", "runtime-tokio-rustls", "postgres", "uuid", "time", "ipnetwork", "macros"] }
+thiserror  = { version = "2" }
 time       = { version = "0.3", features = ["macros", "formatting", "parsing"] }
 tokio      = { version = "1", features = ["full"] }
 tower      = { version = "0.5" }
