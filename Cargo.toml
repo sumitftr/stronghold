@@ -1,8 +1,8 @@
 [workspace]
 resolver = "3"
-members = [ "database", "server", "shared", "util", "web" ]
+members = [ "database", "server", "shared", "util", "app" ]
 exclude = []
-default-members = [ "web" ]
+default-members = [ "app" ]
 
 [workspace.package]
 version = "0.1.0"
@@ -19,6 +19,7 @@ base64     = { version = "0.22" }
 bytes      = { version = "1" }
 const-hex  = { version = "1.17", features = ["alloc"] }
 celes      = { version = "2" }
+dioxus     = { version = "0.7.3", features = ["fullstack"] }
 dotenv     = { version = "0.15" }
 hmac       = { version = "0.12" }
 lettre     = { version = "0.11", features = ["tokio1-rustls", "tokio1-native-tls", "ring", "webpki-roots"] }

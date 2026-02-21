@@ -1,0 +1,12 @@
+[application]
+name = "chessreed"
+
+[web.app]
+title = "chessreed" # HTML title tag content
+
+[web.resource] # include `assets` in web platform
+style = [] # Additional CSS style files
+script = [] # Additional JavaScript files
+
+[web.resource.dev]
+script = [] # Javascript code file (serve: [dev-server] only)

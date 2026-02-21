@@ -1,7 +1,40 @@
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use dioxus::prelude::*;
 
+const THEME_CSS: Asset = asset!("/assets/components-theme.css");
+
+#[cfg(not(feature = "server"))]
+fn main() {
+    dioxus::logger::init(tracing::Level::DEBUG).expect("failed to init logger");
+
+    #[cfg(feature = "web")]
+    dioxus::LaunchBuilder::web().launch(App);
+
+    #[cfg(feature = "desktop")]
+    dioxus::launch(App);
+
+    #[cfg(feature = "mobile")]
+    dioxus::launch(App);
+}
+
+#[component]
+fn App() -> Element {
+    rsx! {
+        document::Link {
+            rel: "icon",
+            href: "https://yt3.ggpht.com/VMFfvP2TUfjGvMfuCzgmUZxoab3pKFMBFIt33vXjbzuYWJV91laJXQ4NC1R32geeFEXFbhQYRw=s600-c-k-c0x00ffffff-no-rj-rp-mo"
+        }
+        document::Script {
+            src: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4",
+            r#type: "module"
+        }
+        document::Stylesheet { href: THEME_CSS }
+    }
+}
+
+#[cfg(feature = "server")]
 #[tokio::main]
-pub async fn main() {
+async fn main() {
+    use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
     dotenv::dotenv().ok();
 
     tracing_subscriber::registry()
@@ -20,6 +53,7 @@ pub async fn main() {
 
 /// Shutdown signal to run axum with graceful shutdown when
 /// a user presses Ctrl+C or Unix sends a terminate signal.
+#[cfg(feature = "server")]
 pub async fn shutdown_signal() {
     let ctrl_c = async {
         tokio::signal::ctrl_c().await.expect("failed to install Ctrl+C handler");

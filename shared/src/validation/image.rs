@@ -14,66 +14,6 @@ enum ImageFormat {
     Gif,
 }
 
-pub fn is_icon_valid(filepath: &mut String, data: &bytes::Bytes) -> Result<String, ValidationError> {
-    let imgdata = get_image_data(filepath, data)?;
-    if imgdata.height != imgdata.width {
-        return Err(ValidationError::InvalidData("Icon should be of ratio 1:1".to_string()));
-    }
-    if imgdata.height < 96 {
-        return Err(ValidationError::InvalidData("Icon too small: min 96x96".to_string()));
-    }
-    if imgdata.height > 2048 {
-        return Err(ValidationError::InvalidData("Icon too large: max 2048x2048".to_string()));
-    }
-    Ok(imgdata.format.to_string())
-}
-
-pub fn is_banner_valid(
-    filepath: &mut String,
-    data: &bytes::Bytes,
-) -> Result<String, ValidationError> {
-    let imgdata = get_image_data(filepath, data)?;
-    Ok(imgdata.format.to_string())
-}
-
-fn get_image_data(filepath: &mut String, data: &bytes::Bytes) -> Result<ImageData, ValidationError> {
-    let _ = std::mem::replace(filepath, filepath.replace("/", "-"));
-
-    if data.starts_with(&[0xFF, 0xD8, 0xFF]) {
-        if !filepath.ends_with(".jpg") && !filepath.ends_with(".jpeg") {
-            filepath.push_str(".jpg");
-        }
-        return jpeg_resolution(data);
-    }
-
-    if data.starts_with(&[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]) {
-        if !filepath.ends_with(".png") {
-            filepath.push_str(".png");
-        }
-        return png_resolution(data);
-    }
-
-    if data.starts_with(&[0x52, 0x49, 0x46, 0x46]) && data[8..12] == [0x57, 0x45, 0x42, 0x50] {
-        if !filepath.ends_with(".webp") {
-            filepath.push_str(".webp");
-        }
-        return webp_resolution(data);
-    }
-
-    // if data.starts_with(&[0x47, 0x49, 0x46, 0x38])
-    //     && data.len() >= 6
-    //     && (data[4] == 0x37 || data[4] == 0x39)
-    //     && data[5] == 0x61
-    // {
-    //     if !filepath.ends_with(".gif") {
-    //         filepath.push_str(".gif");
-    //     }
-    //     return Ok(ImageExt::Gif);
-    // }
-
-    Err(ValidationError::UnknownImageFormat)
-}
-
 impl std::fmt::Display for ImageFormat {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -83,6 +23,82 @@ impl std::fmt::Display for ImageFormat {
             ImageFormat::Gif => write!(f, "image/gif"),
         }
     }
+}
+
+impl ImageFormat {
+    fn update_filepath(&self, filepath: &mut String) {
+        let _ = std::mem::replace(filepath, filepath.replace("/", "-"));
+        match self {
+            ImageFormat::Jpg => {
+                if !filepath.ends_with(".jpg") && !filepath.ends_with(".jpeg") {
+                    filepath.push_str(".jpg");
+                }
+            }
+            ImageFormat::Png => {
+                if !filepath.ends_with(".png") {
+                    filepath.push_str(".png");
+                }
+            }
+            ImageFormat::Webp => {
+                if !filepath.ends_with(".webp") {
+                    filepath.push_str(".webp");
+                }
+            }
+            ImageFormat::Gif => {
+                if !filepath.ends_with(".gif") {
+                    filepath.push_str(".gif");
+                }
+            }
+        }
+    }
+}
+
+pub fn is_icon_valid(filepath: &mut String, data: &bytes::Bytes) -> Result<String, ValidationError> {
+    let imgdata = get_image_data(data)?;
+    if imgdata.height != imgdata.width {
+        return Err(ValidationError::InvalidData("Icon should be of ratio 1:1".to_string()));
+    }
+    if imgdata.height < 96 {
+        return Err(ValidationError::InvalidData("Icon too small: min 96x96".to_string()));
+    }
+    if imgdata.height > 2048 {
+        return Err(ValidationError::InvalidData("Icon too large: max 2048x2048".to_string()));
+    }
+    imgdata.format.update_filepath(filepath);
+    Ok(imgdata.format.to_string())
+}
+
+pub fn is_banner_valid(
+    filepath: &mut String,
+    data: &bytes::Bytes,
+) -> Result<String, ValidationError> {
+    let imgdata = get_image_data(data)?;
+    imgdata.format.update_filepath(filepath);
+    Ok(imgdata.format.to_string())
+}
+
+fn get_image_data(data: &bytes::Bytes) -> Result<ImageData, ValidationError> {
+    if data.starts_with(&[0xFF, 0xD8, 0xFF]) {
+        return jpeg_resolution(data);
+    }
+
+    if data.starts_with(&[0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]) {
+        return png_resolution(data);
+    }
+
+    if data.starts_with(&[0x52, 0x49, 0x46, 0x46]) && data[8..12] == [0x57, 0x45, 0x42, 0x50] {
+        return webp_resolution(data);
+    }
+
+    // if data.starts_with(&[0x47, 0x49, 0x46, 0x38])
+    //     && data.len() >= 6
+    //     && (data[4] == 0x37 || data[4] == 0x39)
+    //     && data[5] == 0x61
+    // {
+    //     return Ok(ImageExt::Gif);
+    // }
+
+    Err(ValidationError::UnknownImageFormat)
 }
 
 fn jpeg_resolution(data: &bytes::Bytes) -> Result<ImageData, ValidationError> {

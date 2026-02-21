@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+@source "./app/src/**/*.{rs,html,css}";
+@source "./components/src/**/*.{rs,html,css}";
+@source not "./chessboard"
