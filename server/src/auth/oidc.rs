@@ -34,7 +34,7 @@ pub async fn login(
         oauth_cfg.provider,
     );
 
-    let redirect_uri = format!("{}/api/oauth2/callback", &*util::SERVICE_DOMAIN);
+    let redirect_uri = format!("{}/api/oauth2/callback", &*shared::SERVICE_DOMAIN);
     let mut request_uri = oauth_cfg.authorization_endpoint.clone();
     request_uri
         .query_pairs_mut()
@@ -82,7 +82,7 @@ pub async fn callback(
     let oauth_cfg =
         util::oauth::get_oauth_provider(oidc_info.provider).ok_or(AppError::InvalidOAuthProvider)?;
     let client = reqwest::Client::new();
-    let redirect_uri = format!("{}/api/oauth2/callback", &*util::SERVICE_DOMAIN);
+    let redirect_uri = format!("{}/api/oauth2/callback", &*shared::SERVICE_DOMAIN);
 
     // Exchange authorization code for tokens
     let token_response = match client

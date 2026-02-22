@@ -25,12 +25,12 @@ pub async fn forgot_password(
 
     util::mail::send(
         body.email.clone(),
-        format!("{} password reset request", &*util::SERVICE_NAME),
+        format!("{} password reset request", &*shared::SERVICE_NAME),
         format!(
             "<h1>Reset your password?</h1>\nIf you requested a password reset for {} press on this link {}\nIf you didn't make the request, please ignore this email.\nThanks, {}\n",
             body.email,
-            format_args!("{}/reset_password?code={code}", &*util::SERVICE_DOMAIN),
-            &*util::SERVICE_NAME
+            format_args!("{}/reset_password?code={code}", &*shared::SERVICE_DOMAIN),
+            &*shared::SERVICE_NAME
         ),
     ).await?;
 
@@ -60,8 +60,8 @@ pub async fn reset_password(
 
     util::mail::send(
         email.clone(),
-        format!("Your {} password has been changed", &*util::SERVICE_NAME),
-        format!("Your password for {} has been changed.\nThanks, {}\n", email, &*util::SERVICE_NAME),
+        format!("Your {} password has been changed", &*shared::SERVICE_NAME),
+        format!("Your password for {email} has been changed.\nThanks, {}\n", &*shared::SERVICE_NAME),
     )
     .await?;
 

@@ -18,9 +18,9 @@ pub async fn routes() -> axum::Router {
         .merge(user::user_routes().await)
 }
 
-pub async fn get_custom_listener() -> stream_drop::CustomListener {
+pub async fn get_custom_listener(addr: std::net::SocketAddr) -> stream_drop::CustomListener {
     use axum::serve::Listener;
-    let listener = tokio::net::TcpListener::bind(std::env::var("SOCKET").unwrap()).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     let custom_listener = stream_drop::CustomListener::from(listener);
     tracing::info!("[+] listening on {}", custom_listener.local_addr().unwrap());
     custom_listener

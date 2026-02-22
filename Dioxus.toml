@@ -1,8 +1,8 @@
 [application]
-name = "chessreed"
+name = "stronghold"
 
 [web.app]
-title = "chessreed" # HTML title tag content
+title = "stronghold" # HTML title tag content
 
 [web.resource] # include `assets` in web platform
 style = [] # Additional CSS style files

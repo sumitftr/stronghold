@@ -8,6 +8,7 @@ license.workspace = true
 readme.workspace = true
 
 [dependencies]
+ui = { path = "../ui" }
 server = { path = "../server", optional = true }
 
 axum = { workspace = true, optional = true }
@@ -22,6 +23,7 @@ workspace = true
 
 [features]
 default = []
+backend = ["dep:server", "dep:tokio", "dep:axum", "dep:tracing-subscriber"]
 server = ["dioxus/server", "dep:server", "dep:tokio", "dep:axum", "dep:tracing-subscriber"]
 web = ["dioxus/web"]
 desktop = ["dioxus/desktop"]

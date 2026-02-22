@@ -1,5 +1,3 @@
-use tokio::net::TcpListener;
-
 pub struct CustomStream(tokio::net::TcpStream);
 
 impl tokio::io::AsyncRead for CustomStream {
@@ -50,7 +48,7 @@ impl Drop for CustomStream {
     }
 }
 
-pub struct CustomListener(TcpListener);
+pub struct CustomListener(tokio::net::TcpListener);
 
 impl axum::serve::Listener for CustomListener {
     type Io = CustomStream;
@@ -66,8 +64,8 @@ impl axum::serve::Listener for CustomListener {
     }
 }
 
-impl From<TcpListener> for CustomListener {
-    fn from(value: TcpListener) -> Self {
+impl From<tokio::net::TcpListener> for CustomListener {
+    fn from(value: tokio::net::TcpListener) -> Self {
         Self(value)
     }
 }

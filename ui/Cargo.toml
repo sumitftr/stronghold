@@ -1,0 +1,22 @@
+[package]
+name = "ui"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+repository.workspace = true
+license.workspace = true
+readme.workspace = true
+
+[dependencies]
+components = { path = "../components" }
+shared = { path = "../shared" }
+
+dioxus = { workspace = true }
+
+[lints]
+workspace = true
+
+[features]
+web = ["dioxus/web"]
+desktop = ["dioxus/desktop"]
+mobile = ["dioxus/mobile"]

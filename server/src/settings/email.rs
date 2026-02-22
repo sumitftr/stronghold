@@ -43,8 +43,8 @@ pub async fn update_email(
     // sending mail to the new email for verification
     util::mail::send(
         body.new_email,
-        format!("{otp} is your {} verification code", &*util::SERVICE_NAME),
-        format!("Confirm your email address\n {otp}\n Thanks,\n {}", &*util::SERVICE_NAME),
+        format!("{otp} is your {} verification code", &*shared::SERVICE_NAME),
+        format!("Confirm your email address\n {otp}\n Thanks,\n {}", &*shared::SERVICE_NAME),
     )
     .await?;
 

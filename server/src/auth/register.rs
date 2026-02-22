@@ -30,8 +30,8 @@ pub async fn start(
     // sending otp to the email
     util::mail::send(
         body.email,
-        format!("{otp} is your {} verification code", &*util::SERVICE_NAME),
-        format!("Confirm your email address\n {otp}\n Thanks,\n {}", &*util::SERVICE_NAME),
+        format!("{otp} is your {} verification code", &*shared::SERVICE_NAME),
+        format!("Confirm your email address\n {otp}\n Thanks,\n {}", &*shared::SERVICE_NAME),
     )
     .await?;
 
@@ -55,8 +55,8 @@ pub async fn resend_otp(
     // resending otp to the email
     util::mail::send(
         body.email,
-        format!("{otp} is your {} verification code", &*util::SERVICE_NAME),
-        format!("Confirm your email address\n {otp}\n Thanks,\n {}", &*util::SERVICE_NAME),
+        format!("{otp} is your {} verification code", &*shared::SERVICE_NAME),
+        format!("Confirm your email address\n {otp}\n Thanks,\n {}", &*shared::SERVICE_NAME),
     )
     .await?;
 
@@ -85,7 +85,7 @@ pub async fn verify_email(
         format!(
             "Your email {} has been verified successfully\n Thanks,\n {}",
             body.email,
-            &*util::SERVICE_NAME
+            &*shared::SERVICE_NAME
         ),
     )
     .await?;

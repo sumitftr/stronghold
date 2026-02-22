@@ -11,7 +11,7 @@
 
 # Build and Run
 
-Step 1: Create a `.env` file inside project root, and set the following environment variables inside `.env` file
+#### Step 1: Create a `.env` file inside project root, and set the following environment variables inside `.env` file
 
 ```dotenv
 SOCKET=your_ip:your_port
@@ -41,7 +41,7 @@ GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
-Step 2: Run database migrations
+#### Step 2: Run database migrations
 
 > For installation use `cargo install sqlx-cli`
 
@@ -53,14 +53,22 @@ sqlx migrate run --source .migrations
 cargo sqlx prepare --workspace
 ```
 
-Step 3: Run your project
+#### Step 3: Run your project
+
+> For installation use `cargo install dioxus-cli`
 
 ```
-cargo run --release
+dx serve --server --port 8080
+```
+
+> Run without dioxus-cli
+
+```
+cargo run --features server
 ```
 
 or (for hot reloading)
 
 ```
-cargo watch -x run
+cargo watch -x run --features server
 ```

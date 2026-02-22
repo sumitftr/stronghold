@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = [ "database", "server", "shared", "util", "app" ]
+members = [ "components", "database", "server", "shared", "ui", "util", "app" ]
 exclude = []
 default-members = [ "app" ]
 
@@ -8,7 +8,7 @@ default-members = [ "app" ]
 version = "0.1.0"
 edition = "2024"
 authors = ["Sumit Modak <sumitftr@proton.me>"]
-repository = "https://github.com/sumitftr/basic-auth"
+repository = "https://github.com/sumitftr/stronghold"
 license = "MIT"
 readme = "README.md"
 
@@ -19,11 +19,12 @@ base64     = { version = "0.22" }
 bytes      = { version = "1" }
 const-hex  = { version = "1.17", features = ["alloc"] }
 celes      = { version = "2" }
-dioxus     = { version = "0.7.3", features = ["fullstack"] }
+dioxus     = { version = "0.7.3", features = ["router", "fullstack", "cli-config"] }
 dotenv     = { version = "0.15" }
 hmac       = { version = "0.12" }
 lettre     = { version = "0.11", features = ["tokio1-rustls", "tokio1-native-tls", "ring", "webpki-roots"] }
 moka       = { version = "0.12", features = ["sync"] }
+primitives = { git = "https://github.com/DioxusLabs/components", package = "dioxus-primitives", version = "0.0.1" }
 rand       = { version = "0.9" }
 reqwest    = { version = "0.12", features = ["json"] }
 serde      = { version = "1", features = ["derive"] }
