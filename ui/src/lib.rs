@@ -12,6 +12,9 @@ use crate::home::Home;
 use crate::not_found::NotFound;
 use dioxus::prelude::*;
 
+static SERVICE_NAME: GlobalSignal<String> = Signal::global(|| (*shared::SERVICE_NAME).clone());
+static SERVICE_DOMAIN: GlobalSignal<String> = Signal::global(|| (*shared::SERVICE_DOMAIN).clone());
+
 #[rustfmt::skip]
 #[derive(Clone, Routable, Debug, PartialEq)]
 pub enum Route {

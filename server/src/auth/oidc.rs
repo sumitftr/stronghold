@@ -186,7 +186,7 @@ pub async fn callback(
             )
             .await?;
             db.remove_oidc_info(&q.csrf_state);
-            Ok(Redirect::to("/register/finish_oidc").into_response())
+            Ok(Redirect::to("/login").into_response())
         }
         Err(e) => Err(e),
     }

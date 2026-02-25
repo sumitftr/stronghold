@@ -12,6 +12,8 @@ components = { path = "../components" }
 shared = { path = "../shared" }
 
 dioxus = { workspace = true }
+reqwest = { workspace = true }
+serde_json = { workspace = true }
 
 [lints]
 workspace = true

@@ -4,7 +4,6 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn NavigationBar() -> Element {
-    let service_name = use_signal(|| &*shared::SERVICE_NAME);
     rsx! {
         div {
             class: "flex flex-col h-screen overflow-hidden",
@@ -27,7 +26,7 @@ pub fn NavigationBar() -> Element {
                             to: Route::Home {},
                             class: "text-xl font-semibold tracking-tight",
                             style: "color: var(--secondary-color-1);",
-                            "{service_name}"
+                            "{crate::SERVICE_NAME}"
                         }
 
                         // Navigation items

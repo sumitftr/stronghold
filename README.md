@@ -11,7 +11,31 @@
 
 # Build and Run
 
-#### Step 1: Create a `.env` file inside project root, and set the following environment variables inside `.env` file
+#### Step 1: Connect to postgreql, create an user and a database
+
+```bash
+sudo -u postgres psql
+```
+
+```psql
+CREATE DATABASE mydb;
+```
+
+```psql
+CREATE USER myuser WITH PASSWORD 'mypassword';
+```
+
+```psql
+GRANT ALL PRIVILEGES ON DATABASE mydb TO myuser;
+```
+
+```psql
+ALTER SCHEMA public OWNER TO myuser;
+```
+
+> Your `DATABASE_URL=postgresql://myuser:mypassword@127.0.0.1:5432/mydb`
+
+#### Step 2: Create a `.env` file inside project root, and set the following environment variables inside `.env` file
 
 ```dotenv
 SOCKET=your_ip:your_port
@@ -41,7 +65,7 @@ GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
-#### Step 2: Run database migrations
+#### Step 3: Run database migrations
 
 > For installation use `cargo install sqlx-cli`
 
@@ -53,7 +77,7 @@ sqlx migrate run --source .migrations
 cargo sqlx prepare --workspace
 ```
 
-#### Step 3: Run your project
+#### Step 4: Run your project
 
 > For installation use `cargo install dioxus-cli`
 

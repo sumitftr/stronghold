@@ -6234,6 +6234,8 @@ version = "0.1.0"
 dependencies = [
  "components",
  "dioxus",
+ "reqwest",
+ "serde_json",
  "shared",
 ]
 
