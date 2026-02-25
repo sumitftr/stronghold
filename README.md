@@ -30,6 +30,10 @@ GRANT ALL PRIVILEGES ON DATABASE mydb TO myuser;
 ```
 
 ```psql
+\c mydb
+```
+
+```psql
 ALTER SCHEMA public OWNER TO myuser;
 ```
 

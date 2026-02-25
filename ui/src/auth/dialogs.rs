@@ -13,13 +13,11 @@ pub(super) fn NameAndEmail(
             div {
                 class: "flex flex-col space-y-2 mb-8",
                 h1 {
-                    class: "text-3xl font-semibold tracking-tight",
-                    style: "color: var(--secondary-color-1);",
+                    class: "text-3xl font-semibold tracking-tight text-[var(--secondary-color-1)]",
                     "Create account"
                 }
                 p {
-                    class: "text-base",
-                    style: "color: var(--secondary-color-5);",
+                    class: "text-base text-[var(--secondary-color-5)]",
                     "Enter your details to get started"
                 }
             }
@@ -37,8 +35,7 @@ pub(super) fn NameAndEmail(
                 div {
                     class: "space-y-2",
                     label {
-                        class: "text-base font-medium",
-                        style: "color: var(--secondary-color-2);",
+                        class: "text-base font-medium text-[var(--secondary-color-2)]",
                         r#for: "name",
                         "Full Name"
                     }
@@ -47,7 +44,7 @@ pub(super) fn NameAndEmail(
                         style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1); focus:ring-color: var(--focused-border-color);",
                         r#type: "text",
                         id: "name",
-                        placeholder: "John Doe",
+                        placeholder: "Your Name",
                         value: "{name}",
                         oninput: move |e| name.set(e.value()),
                         required: true,
@@ -58,14 +55,13 @@ pub(super) fn NameAndEmail(
                 div {
                     class: "space-y-2",
                     label {
-                        class: "text-base font-medium",
-                        style: "color: var(--secondary-color-2);",
+                        class: "text-base font-medium text-[var(--secondary-color-2)]",
                         r#for: "email",
                         "Email Address"
                     }
                     input {
-                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
-                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1); focus:ring-color: var(--focused-border-color);",
+                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 text-[var(--secondary-color-1)]",
+                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); focus:ring-color: var(--focused-border-color);",
                         r#type: "email",
                         id: "email",
                         placeholder: "name@example.com",
@@ -77,8 +73,7 @@ pub(super) fn NameAndEmail(
 
                 // Submit button
                 button {
-                    class: "w-full h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
-                    style: "background-color: var(--secondary-color-1); color: var(--primary-color);",
+                    class: "w-full h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-color)] bg-[var(--secondary-color-1)]",
                     r#type: "submit",
                     disabled: is_loading(),
                     if is_loading() {
@@ -94,7 +89,7 @@ pub(super) fn NameAndEmail(
 
 #[component]
 pub(super) fn VerifyWithOtp(
-    email: String,
+    email: ReadSignal<String>,
     otp: Signal<String>,
     is_loading: Signal<bool>,
     on_next: EventHandler<()>,
@@ -111,19 +106,16 @@ pub(super) fn VerifyWithOtp(
             div {
                 class: "flex flex-col space-y-2 mb-8",
                 h1 {
-                    class: "text-3xl font-semibold tracking-tight",
-                    style: "color: var(--secondary-color-1);",
+                    class: "text-3xl font-semibold tracking-tight text-[var(--secondary-color-1)]",
                     "Verify your email"
                 }
                 p {
-                    class: "text-base",
-                    style: "color: var(--secondary-color-5);",
+                    class: "text-base text-[var(--secondary-color-5)]",
                     "We've sent a verification code to"
                 }
                 p {
-                    class: "text-base font-medium",
-                    style: "color: var(--secondary-color-1);",
-                    "{email}"
+                    class: "text-base font-medium text-[var(--secondary-color-1)]",
+                    "{email()}"
                 }
             }
 
@@ -140,14 +132,13 @@ pub(super) fn VerifyWithOtp(
                 div {
                     class: "space-y-2",
                     label {
-                        class: "text-base font-medium",
-                        style: "color: var(--secondary-color-2);",
+                        class: "text-base font-medium text-[var(--secondary-color-2)]",
                         r#for: "otp",
                         "Verification Code"
                     }
                     input {
-                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base text-center tracking-widest transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
-                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1); focus:ring-color: var(--focused-border-color); font-size: 1.25rem; letter-spacing: 0.5em;",
+                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base text-center tracking-widest transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 text-[var(--secondary-color-1)] bg-[var(--primary-color-3)]",
+                        style: "border-color: var(--primary-color-6); focus:ring-color: var(--focused-border-color); font-size: 1.25rem; letter-spacing: 0.5em;",
                         r#type: "text",
                         id: "otp",
                         placeholder: "000000",
@@ -163,8 +154,7 @@ pub(super) fn VerifyWithOtp(
                 div {
                     class: "text-center",
                     button {
-                        class: "text-base font-medium hover:underline disabled:opacity-50 disabled:no-underline",
-                        style: "color: var(--focused-border-color);",
+                        class: "text-base font-medium hover:underline disabled:opacity-50 disabled:no-underline bg-[var(--focused-border-color)]",
                         r#type: "button",
                         onclick: move |_| on_resend.call(()),
                         disabled: resend_cooldown() > 0,
@@ -180,15 +170,14 @@ pub(super) fn VerifyWithOtp(
                 div {
                     class: "flex gap-3 pt-2",
                     button {
-                        class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors",
-                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1);",
+                        class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors text-[var(--secondary-color-1)] bg-[var(--primary-color-3)] border-[var(--primary-color-6)]",
                         r#type: "button",
                         onclick: move |_| on_back.call(()),
                         "Back"
                     }
                     button {
-                        class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
-                        style: "background-color: var(--secondary-color-1); color: var(--primary-color);",
+                        class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-color)]",
+                        style: "background-color: var(--secondary-color-1);",
                         r#type: "submit",
                         disabled: is_loading(),
                         if is_loading() {
@@ -205,7 +194,7 @@ pub(super) fn VerifyWithOtp(
 
 #[component]
 pub(super) fn EnterPassword(
-    email: String,
+    email: ReadSignal<String>,
     password: Signal<String>,
     confirm_password: Signal<String>,
     is_loading: Signal<bool>,
@@ -218,13 +207,11 @@ pub(super) fn EnterPassword(
             div {
                 class: "flex flex-col space-y-2 mb-8",
                 h1 {
-                    class: "text-3xl font-semibold tracking-tight",
-                    style: "color: var(--secondary-color-1);",
+                    class: "text-3xl font-semibold tracking-tight bg-[var(--secondary-color-1)]",
                     "Set your password"
                 }
                 p {
-                    class: "text-base",
-                    style: "color: var(--secondary-color-5);",
+                    class: "text-base text-[var(--secondary-color-5)]",
                     "Choose a strong password for your account"
                 }
             }
@@ -242,14 +229,13 @@ pub(super) fn EnterPassword(
                 div {
                     class: "space-y-2",
                     label {
-                        class: "text-base font-medium",
-                        style: "color: var(--secondary-color-2);",
+                        class: "text-base font-medium text-[var(--secondary-color-2)]",
                         r#for: "password",
                         "Password"
                     }
                     input {
-                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
-                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1); focus:ring-color: var(--focused-border-color);",
+                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 text-[var(--secondary-color-1)]",
+                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); focus:ring-color: var(--focused-border-color);",
                         r#type: "password",
                         id: "password",
                         placeholder: "••••••••",
@@ -259,8 +245,7 @@ pub(super) fn EnterPassword(
                         minlength: "8",
                     }
                     p {
-                        class: "text-sm",
-                        style: "color: var(--secondary-color-5);",
+                        class: "text-sm text-[var(--secondary-color-5)]",
                         "Must be at least 8 characters"
                     }
                 }
@@ -269,14 +254,13 @@ pub(super) fn EnterPassword(
                 div {
                     class: "space-y-2",
                     label {
-                        class: "text-base font-medium",
-                        style: "color: var(--secondary-color-2);",
+                        class: "text-base font-medium text-[var(--secondary-color-2)]",
                         r#for: "confirm-password",
                         "Confirm Password"
                     }
                     input {
-                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
-                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1); focus:ring-color: var(--focused-border-color);",
+                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 text-[var(--secondary-color-1)]",
+                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); focus:ring-color: var(--focused-border-color);",
                         r#type: "password",
                         id: "confirm-password",
                         placeholder: "••••••••",
@@ -290,15 +274,15 @@ pub(super) fn EnterPassword(
                 div {
                     class: "flex gap-3 pt-2",
                     button {
-                        class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors",
-                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1);",
+                        class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors text-[var(--secondary-color-1)]",
+                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6);",
                         r#type: "button",
                         onclick: move |_| on_back.call(()),
                         "Back"
                     }
                     button {
-                        class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
-                        style: "background-color: var(--secondary-color-1); color: var(--primary-color);",
+                        class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-color)]",
+                        style: "background-color: var(--secondary-color-1);",
                         r#type: "submit",
                         disabled: is_loading(),
                         if is_loading() {
@@ -315,7 +299,7 @@ pub(super) fn EnterPassword(
 
 #[component]
 pub(super) fn EnterUsername(
-    email: String,
+    email: ReadSignal<String>,
     username: Signal<String>,
     is_loading: Signal<bool>,
     on_complete: EventHandler<()>,
@@ -327,13 +311,11 @@ pub(super) fn EnterUsername(
             div {
                 class: "flex flex-col space-y-2 mb-8",
                 h1 {
-                    class: "text-3xl font-semibold tracking-tight",
-                    style: "color: var(--secondary-color-1);",
+                    class: "text-3xl font-semibold tracking-tight text-[var(--secondary-color-1)]",
                     "Choose your username"
                 }
                 p {
-                    class: "text-base",
-                    style: "color: var(--secondary-color-5);",
+                    class: "text-base text-[var(--secondary-color-5)]",
                     "This is how others will see you on the platform"
                 }
             }
@@ -351,17 +333,15 @@ pub(super) fn EnterUsername(
                 div {
                     class: "space-y-2",
                     label {
-                        class: "text-base font-medium",
-                        style: "color: var(--secondary-color-2);",
+                        class: "text-base font-medium text-[var(--secondary-color-2)]",
                         r#for: "username",
                         "Username"
                     }
                     input {
-                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
-                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1); focus:ring-color: var(--focused-border-color);",
+                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 text-[var(--secondary-color-1)]",
+                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); focus:ring-color: var(--focused-border-color);",
                         r#type: "text",
                         id: "username",
-                        placeholder: "johndoe",
                         value: "{username}",
                         oninput: move |e| username.set(e.value()),
                         required: true,
@@ -369,9 +349,8 @@ pub(super) fn EnterUsername(
                         minlength: "3",
                     }
                     p {
-                        class: "text-sm",
-                        style: "color: var(--secondary-color-5);",
-                        "Only letters, numbers, and underscores. Min 3 characters."
+                        class: "text-sm text-[var(--secondary-color-5)]",
+                        "Only letters, numbers, and periods. Min 6 characters."
                     }
                 }
 
@@ -379,15 +358,14 @@ pub(super) fn EnterUsername(
                 div {
                     class: "flex gap-3 pt-2",
                     button {
-                        class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors",
-                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1);",
+                        class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors text-[var(--secondary-color-1)] bg-[var(--secondary-color-3)]",
+                        style: "border-color: var(--primary-color-6);",
                         r#type: "button",
                         onclick: move |_| on_back.call(()),
                         "Back"
                     }
                     button {
-                        class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
-                        style: "background-color: var(--secondary-color-1); color: var(--primary-color);",
+                        class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-color)] bg-[var(--secondary-color-1)]",
                         r#type: "submit",
                         disabled: is_loading(),
                         if is_loading() {

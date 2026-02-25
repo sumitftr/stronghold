@@ -22,15 +22,13 @@ pub fn ForgotPassword() -> Element {
 
     rsx! {
         div {
-            class: "min-h-screen flex items-center justify-center px-4",
-            style: "background-color: var(--primary-color);",
+            class: "min-h-screen flex items-center justify-center px-4 bg-[var(--primary-color)]",
 
             div {
                 class: "w-full max-w-md",
 
                 div {
-                    class: "rounded-lg border p-8 shadow-sm",
-                    style: "background-color: var(--primary-color-1); border-color: var(--primary-color-6);",
+                    class: "rounded-lg border p-8 shadow-sm bg-[var(--primary-color)] border-[var(--primary-color-6)]",
 
                     if !email_sent() {
                         // Enter email form
@@ -39,13 +37,11 @@ pub fn ForgotPassword() -> Element {
                             div {
                                 class: "flex flex-col space-y-2 mb-6",
                                 h1 {
-                                    class: "text-2xl font-semibold tracking-tight",
-                                    style: "color: var(--secondary-color-1);",
+                                    class: "text-2xl font-semibold tracking-tight text-[var(--secondary-color-1)]",
                                     "Reset your password"
                                 }
                                 p {
-                                    class: "text-base",
-                                    style: "color: var(--secondary-color-5);",
+                                    class: "text-base text-[var(--secondary-color-5)]",
                                     "Enter your email address and we'll send you a link to reset your password"
                                 }
                             }
@@ -59,14 +55,13 @@ pub fn ForgotPassword() -> Element {
                                 div {
                                     class: "space-y-2",
                                     label {
-                                        class: "text-base font-medium",
-                                        style: "color: var(--secondary-color-2);",
+                                        class: "text-base font-medium text-[var(--secondary-color-2)]",
                                         r#for: "email",
                                         "Email Address"
                                     }
                                     input {
-                                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
-                                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1); focus:ring-color: var(--focused-border-color);",
+                                        class: "flex h-11 w-full rounded-md border px-4 py-2 text-base transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 text-[var(--secondary-color-1)]",
+                                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); focus:ring-color: var(--focused-border-color);",
                                         r#type: "email",
                                         id: "email",
                                         placeholder: "name@example.com",
@@ -81,8 +76,8 @@ pub fn ForgotPassword() -> Element {
                                 div {
                                     class: "flex gap-3 pt-2",
                                     button {
-                                        class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors",
-                                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1);",
+                                        class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors text-[var(--secondary-color-1)]",
+                                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6);",
                                         r#type: "button",
                                         onclick: move |_| {
                                             router().go_back();
@@ -90,8 +85,8 @@ pub fn ForgotPassword() -> Element {
                                         "Cancel"
                                     }
                                     button {
-                                        class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
-                                        style: "background-color: var(--secondary-color-1); color: var(--primary-color);",
+                                        class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-color)]",
+                                        style: "background-color: var(--secondary-color-1);",
                                         r#type: "submit",
                                         disabled: is_loading(),
                                         if is_loading() {
@@ -132,31 +127,26 @@ pub fn ForgotPassword() -> Element {
                             div {
                                 class: "flex flex-col space-y-2 text-center mb-6",
                                 h2 {
-                                    class: "text-2xl font-semibold tracking-tight",
-                                    style: "color: var(--secondary-color-1);",
+                                    class: "text-2xl font-semibold tracking-tight text-[var(--secondary-color-1)]",
                                     "Check your email"
                                 }
                                 p {
-                                    class: "text-base",
-                                    style: "color: var(--secondary-color-5);",
+                                    class: "text-base text-[var(--secondary-color-5)]",
                                     "We've sent a password reset link to"
                                 }
                                 p {
-                                    class: "text-base font-medium",
-                                    style: "color: var(--secondary-color-1);",
+                                    class: "text-base font-medium text-[var(--secondary-color-1)]",
                                     "{email}"
                                 }
                             }
 
                             // Instructions
                             div {
-                                class: "rounded-lg border p-4 mb-6",
-                                style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6);",
+                                class: "rounded-lg border p-4 mb-6 text-[var(--primary-color-3)] border-[var(--primary-color-6)]",
                                 ul {
-                                    class: "space-y-2 text-sm",
-                                    style: "color: var(--secondary-color-5);",
+                                    class: "space-y-2 text-sm text-[var(--secondary-color-5)]",
                                     li { "• Click the link in the email to reset your password" }
-                                    li { "• The link will expire in 1 hour" }
+                                    li { "• The link will expire in 5 minutes" }
                                     li { "• Check your spam folder if you don't see it" }
                                 }
                             }
@@ -167,21 +157,18 @@ pub fn ForgotPassword() -> Element {
                                 div {
                                     class: "text-center",
                                     span {
-                                        class: "text-base",
-                                        style: "color: var(--secondary-color-5);",
+                                        class: "text-base text-[var(--secondary-color-5)]",
                                         "Didn't receive the email? "
                                     }
                                     button {
-                                        class: "text-base font-medium hover:underline",
-                                        style: "color: var(--focused-border-color);",
+                                        class: "text-base font-medium hover:underline text-[var(--focused-border-color)]",
                                         onclick: handle_resend,
                                         "Resend link"
                                     }
                                 }
 
                                 button {
-                                    class: "w-full h-11 rounded-md border text-base font-medium transition-colors",
-                                    style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1);",
+                                    class: "w-full h-11 rounded-md border text-base font-medium transition-colors bg-[var(--primary-color-3)] border-[var(--primary-color-6)] text-[var(--secondary-color-1)]",
                                     onclick: move |_| {
                                         router().go_back();
                                     },

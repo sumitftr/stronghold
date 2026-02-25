@@ -1,10 +1,9 @@
 use crate::Route;
-use crate::SERVICE_DOMAIN;
 use dioxus::prelude::*;
 
 #[component]
 pub fn Login() -> Element {
-    let mut email = use_signal(String::new);
+    let mut id = use_signal(String::new);
     let mut password = use_signal(String::new);
     let mut is_loading = use_signal(|| false);
     let mut error_message = use_signal(String::new);
@@ -15,9 +14,8 @@ pub fn Login() -> Element {
     let handle_login = move |ev: Event<FormData>| async move {
         ev.prevent_default();
         is_loading.set(true);
-        error_message.set(String::new());
 
-        let id = email();
+        let id = id();
         let pass = password();
 
         // Validate input
@@ -41,8 +39,7 @@ pub fn Login() -> Element {
         };
 
         // Send login request
-        let domain = SERVICE_DOMAIN();
-        let url = format!("{}/api/login", domain);
+        let url = format!("{}/api/login", crate::SERVICE_DOMAIN());
 
         match reqwest::Client::new()
             .post(&url)
@@ -76,8 +73,7 @@ pub fn Login() -> Element {
         is_loading.set(true);
         error_message.set(String::new());
 
-        let domain = SERVICE_DOMAIN();
-        let url = format!("{}/api/oauth2/login", domain);
+        let url = format!("{}/api/oauth2/login", crate::SERVICE_DOMAIN());
 
         // Redirect to OAuth endpoint
         // In a real browser environment, you'd use window.location
@@ -115,8 +111,7 @@ pub fn Login() -> Element {
 
     rsx! {
         div {
-            class: "min-h-screen flex items-center justify-center px-4",
-            style: "background-color: var(--primary-color);",
+            class: "min-h-screen flex items-center justify-center px-4 bg-[var(--primary-color)]",
 
             div {
                 class: "w-full max-w-md",
@@ -132,20 +127,17 @@ pub fn Login() -> Element {
                 } else {
                     // Card container
                     div {
-                        class: "rounded-lg border p-8 shadow-sm",
-                        style: "background-color: var(--primary-color-1); border-color: var(--primary-color-6);",
+                        class: "rounded-lg border p-8 shadow-sm bg-[var(--primary-color-1)] border-[var(--primary-color-6)]",
 
                         // Header
                         div {
                             class: "flex flex-col space-y-2 text-center mb-6",
                             h1 {
-                                class: "text-2xl font-semibold tracking-tight",
-                                style: "color: var(--secondary-color-1);",
+                                class: "text-2xl font-semibold tracking-tight text-[var(--secondary-color-1)]",
                                 "Welcome back"
                             }
                             p {
-                                class: "text-sm",
-                                style: "color: var(--secondary-color-5);",
+                                class: "text-sm text-[var(--secondary-color-5)]",
                                 "Enter your credentials to sign in to your account"
                             }
                         }
@@ -153,8 +145,8 @@ pub fn Login() -> Element {
                         // Error message
                         if !error_message().is_empty() {
                             div {
-                                class: "mb-4 p-3 rounded-md text-sm",
-                                style: "background-color: #fee; border: 1px solid #fcc; color: #c33;",
+                                class: "mb-4 p-3 rounded-md text-sm bg-[#fee] text-[#c33]",
+                                style: "border: 1px solid #fcc;",
                                 {error_message()}
                             }
                         }
@@ -168,19 +160,18 @@ pub fn Login() -> Element {
                             div {
                                 class: "space-y-2",
                                 label {
-                                    class: "text-sm font-medium",
-                                    style: "color: var(--secondary-color-2);",
+                                    class: "text-sm font-medium text-[var(--secondary-color-2)]",
                                     r#for: "email",
                                     "Email or Username"
                                 }
                                 input {
-                                    class: "flex h-10 w-full rounded-md border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
-                                    style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1); focus:ring-color: var(--focused-border-color);",
+                                    class: "flex h-10 w-full rounded-md border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[var(--primary-color-3)] text-[var(--secondary-color-1)]",
+                                    style: "border-color: var(--primary-color-6); focus:ring-color: var(--focused-border-color);",
                                     r#type: "text",
                                     id: "email",
                                     placeholder: "name@example.com",
-                                    value: "{email}",
-                                    oninput: move |e| email.set(e.value()),
+                                    value: "{id}",
+                                    oninput: move |e| id.set(e.value()),
                                     required: true,
                                 }
                             }
@@ -191,21 +182,19 @@ pub fn Login() -> Element {
                                 div {
                                     class: "flex items-center justify-between",
                                     label {
-                                        class: "text-sm font-medium",
-                                        style: "color: var(--secondary-color-2);",
+                                        class: "text-sm font-medium text-[var(--secondary-color-2)]",
                                         r#for: "password",
                                         "Password"
                                     }
                                     a {
                                         href: "/forgot-password",
-                                        class: "text-sm font-medium hover:underline",
-                                        style: "color: var(--focused-border-color);",
+                                        class: "text-sm font-medium hover:underline text-[var(--focused-border-color)]",
                                         "Forgot password?"
                                     }
                                 }
                                 input {
-                                    class: "flex h-10 w-full rounded-md border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
-                                    style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1); focus:ring-color: var(--focused-border-color);",
+                                    class: "flex h-10 w-full rounded-md border px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[var(--primary-color-3)] text-[var(--secondary-color-1)]",
+                                    style: "border-color: var(--primary-color-6); focus:ring-color: var(--focused-border-color);",
                                     r#type: "password",
                                     id: "password",
                                     placeholder: "••••••••",
@@ -217,8 +206,7 @@ pub fn Login() -> Element {
 
                             // Submit button
                             button {
-                                class: "w-full h-10 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
-                                style: "background-color: var(--secondary-color-1); color: var(--primary-color);",
+                                class: "w-full h-10 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--secondary-color-1)] text-[var(--primary-color)]",
                                 r#type: "submit",
                                 disabled: is_loading(),
                                 if is_loading() {
@@ -242,8 +230,7 @@ pub fn Login() -> Element {
                             div {
                                 class: "relative flex justify-center text-xs uppercase",
                                 span {
-                                    class: "px-2 text-xs",
-                                    style: "background-color: var(--primary-color-1); color: var(--secondary-color-5);",
+                                    class: "px-2 text-xs bg-[var(--primary-color-1)] text-[var(--secondary-color-5)]",
                                     "Or continue with"
                                 }
                             }
@@ -251,8 +238,8 @@ pub fn Login() -> Element {
 
                         // Google login button
                         button {
-                            class: "w-full h-10 rounded-md border text-sm font-medium transition-colors flex items-center justify-center gap-2",
-                            style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6); color: var(--secondary-color-1);",
+                            class: "w-full h-10 rounded-md border text-sm font-medium transition-colors flex items-center justify-center gap-2 bg-[var(--primary-color-3)] text-[var(--secondary-color-1)]",
+                            style: "border-color: var(--primary-color-6);",
                             onclick: handle_google_login,
                             disabled: is_loading(),
                             // Google icon
@@ -285,13 +272,11 @@ pub fn Login() -> Element {
 
                         // Register link
                         div {
-                            class: "mt-6 text-center text-sm",
-                            style: "color: var(--secondary-color-5);",
+                            class: "mt-6 text-center text-sm text-[var(--secondary-color-5)]",
                             "Don't have an account? "
                             Link {
                                 to: Route::Register {},
-                                class: "font-medium hover:underline",
-                                style: "color: var(--focused-border-color);",
+                                class: "font-medium hover:underline text-[var(--focused-border-color)]",
                                 "Register"
                             }
                         }
@@ -322,8 +307,7 @@ fn SetUsernameStep(
         // Validate username
         match shared::validation::is_username_valid(&username_val) {
             Ok(_) => {
-                let domain = SERVICE_DOMAIN();
-                let url = format!("{}/api/register/set_username", domain);
+                let url = format!("{}/api/register/set_username", crate::SERVICE_DOMAIN());
 
                 match reqwest::Client::new()
                     .post(&url)
