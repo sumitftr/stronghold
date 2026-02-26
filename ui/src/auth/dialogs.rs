@@ -5,7 +5,7 @@ pub(super) fn NameAndEmail(
     name: Signal<String>,
     email: Signal<String>,
     is_loading: Signal<bool>,
-    on_next: EventHandler<()>,
+    on_submit: EventHandler<()>,
 ) -> Element {
     rsx! {
         div {
@@ -27,8 +27,7 @@ pub(super) fn NameAndEmail(
                 class: "space-y-5",
                 onsubmit: move |ev: Event<FormData>| {
                     ev.prevent_default();
-                    // TODO: send request to /api/register/start
-                    on_next.call(());
+                    on_submit.call(());
                 },
 
                 // Name field
@@ -92,9 +91,8 @@ pub(super) fn VerifyWithOtp(
     email: ReadSignal<String>,
     otp: Signal<String>,
     is_loading: Signal<bool>,
-    on_next: EventHandler<()>,
+    on_submit: EventHandler<()>,
     on_resend: EventHandler<()>,
-    on_back: EventHandler<()>,
 ) -> Element {
     let mut resend_cooldown = use_signal(|| 0);
 
@@ -124,8 +122,7 @@ pub(super) fn VerifyWithOtp(
                 class: "space-y-5",
                 onsubmit: move |ev: Event<FormData>| {
                     ev.prevent_default();
-                    // TODO: send request to /api/register/verify_email
-                    on_next.call(());
+                    on_submit.call(());
                 },
 
                 // OTP field
@@ -167,26 +164,26 @@ pub(super) fn VerifyWithOtp(
                 }
 
                 // Action buttons
-                div {
-                    class: "flex gap-3 pt-2",
-                    button {
-                        class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors text-[var(--secondary-color-1)] bg-[var(--primary-color-3)] border-[var(--primary-color-6)]",
-                        r#type: "button",
-                        onclick: move |_| on_back.call(()),
-                        "Back"
-                    }
-                    button {
-                        class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-color)]",
-                        style: "background-color: var(--secondary-color-1);",
-                        r#type: "submit",
-                        disabled: is_loading(),
-                        if is_loading() {
-                            "Verifying..."
-                        } else {
-                            "Verify"
-                        }
+                // div {
+                //     class: "flex gap-3 pt-2",
+                //     button {
+                //         class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors text-[var(--secondary-color-1)] bg-[var(--primary-color-3)] border-[var(--primary-color-6)]",
+                //         r#type: "button",
+                //         onclick: move |_| on_back.call(()),
+                //         "Back"
+                //     }
+                button {
+                    class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-color)]",
+                    style: "background-color: var(--secondary-color-1);",
+                    r#type: "submit",
+                    disabled: is_loading(),
+                    if is_loading() {
+                        "Verifying..."
+                    } else {
+                        "Verify"
                     }
                 }
+                // }
             }
         }
     }
@@ -198,8 +195,7 @@ pub(super) fn EnterPassword(
     password: Signal<String>,
     confirm_password: Signal<String>,
     is_loading: Signal<bool>,
-    on_next: EventHandler<()>,
-    on_back: EventHandler<()>,
+    on_submit: EventHandler<()>,
 ) -> Element {
     rsx! {
         div {
@@ -221,8 +217,7 @@ pub(super) fn EnterPassword(
                 class: "space-y-5",
                 onsubmit: move |ev: Event<FormData>| {
                     ev.prevent_default();
-                    // TODO: send request to /api/register/set_password
-                    on_next.call(())
+                    on_submit.call(())
                 },
 
                 // Password field
@@ -271,27 +266,27 @@ pub(super) fn EnterPassword(
                 }
 
                 // Action buttons
-                div {
-                    class: "flex gap-3 pt-2",
-                    button {
-                        class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors text-[var(--secondary-color-1)]",
-                        style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6);",
-                        r#type: "button",
-                        onclick: move |_| on_back.call(()),
-                        "Back"
-                    }
-                    button {
-                        class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-color)]",
-                        style: "background-color: var(--secondary-color-1);",
-                        r#type: "submit",
-                        disabled: is_loading(),
-                        if is_loading() {
-                            "Setting password..."
-                        } else {
-                            "Continue"
-                        }
+                // div {
+                //     class: "flex gap-3 pt-2",
+                //     button {
+                //         class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors text-[var(--secondary-color-1)]",
+                //         style: "background-color: var(--primary-color-3); border-color: var(--primary-color-6);",
+                //         r#type: "button",
+                //         onclick: move |_| on_back.call(()),
+                //         "Back"
+                //     }
+                button {
+                    class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-color)]",
+                    style: "background-color: var(--secondary-color-1);",
+                    r#type: "submit",
+                    disabled: is_loading(),
+                    if is_loading() {
+                        "Setting password..."
+                    } else {
+                        "Continue"
                     }
                 }
+                // }
             }
         }
     }
@@ -302,8 +297,7 @@ pub(super) fn EnterUsername(
     email: ReadSignal<String>,
     username: Signal<String>,
     is_loading: Signal<bool>,
-    on_complete: EventHandler<()>,
-    on_back: EventHandler<()>,
+    on_submit: EventHandler<()>,
 ) -> Element {
     rsx! {
         div {
@@ -325,8 +319,7 @@ pub(super) fn EnterUsername(
                 class: "space-y-5",
                 onsubmit: move |ev: Event<FormData>| {
                     ev.prevent_default();
-                    // TODO: send request to /api/register/set_username
-                    on_complete.call(())
+                    on_submit.call(())
                 },
 
                 // Username field
@@ -345,8 +338,8 @@ pub(super) fn EnterUsername(
                         value: "{username}",
                         oninput: move |e| username.set(e.value()),
                         required: true,
-                        pattern: "[a-zA-Z0-9_]+",
-                        minlength: "3",
+                        pattern: "[a-zA-Z0-9.]+",
+                        minlength: "6",
                     }
                     p {
                         class: "text-sm text-[var(--secondary-color-5)]",
@@ -355,26 +348,26 @@ pub(super) fn EnterUsername(
                 }
 
                 // Action buttons
-                div {
-                    class: "flex gap-3 pt-2",
-                    button {
-                        class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors text-[var(--secondary-color-1)] bg-[var(--secondary-color-3)]",
-                        style: "border-color: var(--primary-color-6);",
-                        r#type: "button",
-                        onclick: move |_| on_back.call(()),
-                        "Back"
-                    }
-                    button {
-                        class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-color)] bg-[var(--secondary-color-1)]",
-                        r#type: "submit",
-                        disabled: is_loading(),
-                        if is_loading() {
-                            "Completing registration..."
-                        } else {
-                            "Complete Registration"
-                        }
+                // div {
+                //     class: "flex gap-3 pt-2",
+                //     button {
+                //         class: "flex-1 h-11 rounded-md border text-base font-medium transition-colors text-[var(--secondary-color-1)] bg-[var(--secondary-color-3)]",
+                //         style: "border-color: var(--primary-color-6);",
+                //         r#type: "button",
+                //         onclick: move |_| on_back.call(()),
+                //         "Back"
+                //     }
+                button {
+                    class: "flex-1 h-11 rounded-md text-base font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-[var(--primary-color)] bg-[var(--secondary-color-1)]",
+                    r#type: "submit",
+                    disabled: is_loading(),
+                    if is_loading() {
+                        "Completing registration..."
+                    } else {
+                        "Complete Registration"
                     }
                 }
+                // }
             }
         }
     }

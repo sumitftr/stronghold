@@ -12,7 +12,7 @@ async fn main() {
         .with(tracing_subscriber::fmt::Layer::default())
         .init();
     let addr = dioxus::cli_config::fullstack_address_or_localhost();
-    // let addr = std::net::SocketAddr::from_str(&std::env::var("SOCKET").unwrap()).unwrap();
+    // let server_addr = std::net::SocketAddr::from_str(&std::env::var("SOCKET").unwrap()).unwrap();
     let router = axum::Router::new()
         .serve_dioxus_application(ServeConfig::new(), App)
         .merge(server::routes().await);

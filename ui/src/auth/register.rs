@@ -12,6 +12,7 @@ enum RegisterStep {
 #[component]
 pub fn Register() -> Element {
     let mut current_step = use_signal(|| RegisterStep::NameAndEmail);
+    let mut client = use_signal(|| reqwest::Client::builder().build().unwrap_or_default());
     let mut name = use_signal(String::new);
     let mut email = use_signal(String::new);
     let mut otp = use_signal(String::new);
@@ -19,6 +20,7 @@ pub fn Register() -> Element {
     let mut confirm_password = use_signal(String::new);
     let mut username = use_signal(String::new);
     let mut is_loading = use_signal(|| false);
+    let mut error_message = use_signal(String::new);
 
     rsx! {
         div {
@@ -40,9 +42,32 @@ pub fn Register() -> Element {
                                 name,
                                 email,
                                 is_loading,
-                                on_next: move |_| {
-                                    // TODO: Send CreateUserRequest
-                                    current_step.set(RegisterStep::VerifyWithOtp);
+                                on_submit: move |_| async move {
+                                    if let Err(e) = shared::validation::is_email_valid(&email()) {
+                                        error_message.set(e.to_string());
+                                    }
+                                    if let Err(e) = shared::validation::is_display_name_valid(&name()) {
+                                        error_message.set(e.to_string());
+                                    }
+                                    let result = client()
+                                        .post(format!("{}/api/register", crate::SERVICE_DOMAIN))
+                                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                                        .body(format!(r#"{{"name": "{name}", "email": "{email}"}}"#))
+                                        .send().await;
+                                    match result {
+                                        Ok(v) => {
+                                            if v.status().is_success() {
+                                                current_step.set(RegisterStep::VerifyWithOtp);
+                                            } else {
+                                                match v.text().await {
+                                                    Ok(e) => error_message.set(e),
+                                                    Err(e) => error_message.set(e.to_string())
+                                                }
+
+                                            }
+                                        },
+                                        Err(e) => error_message.set(e.to_string()),
+                                    }
                                 }
                             }
                         },
@@ -51,16 +76,45 @@ pub fn Register() -> Element {
                                 email: email,
                                 otp,
                                 is_loading,
-                                on_next: move |_| {
-                                    // TODO: Send VerifyEmailRequest
-                                    current_step.set(RegisterStep::EnterPassword);
+                                on_submit: move |_| async move {
+                                    let result = client()
+                                        .post(format!("{}/api/register/verify_email", crate::SERVICE_DOMAIN))
+                                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                                        .body(format!(r#"{{"email": "{email}", "otp": "{otp}"}}"#))
+                                        .send().await;
+                                    match result {
+                                        Ok(v) => {
+                                            if v.status().is_success() {
+                                                current_step.set(RegisterStep::EnterPassword);
+                                            } else {
+                                                match v.text().await {
+                                                    Ok(e) => error_message.set(e),
+                                                    Err(e) => error_message.set(e.to_string())
+                                                }
+
+                                            }
+                                        },
+                                        Err(e) => error_message.set(e.to_string()),
+                                    }
                                 },
-                                on_resend: move |_| {
-                                    // TODO: Send ResendOtpRequest
+                                on_resend: move |_| async move {
+                                    let result = client()
+                                        .post(format!("{}/api/register/resend_otp", crate::SERVICE_DOMAIN))
+                                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                                        .body(format!(r#"{{"email": "{email}""#))
+                                        .send().await;
+                                    match result {
+                                        Ok(v) => {
+                                            if !v.status().is_success() {
+                                                match v.text().await {
+                                                    Ok(e) => error_message.set(e),
+                                                    Err(e) => error_message.set(e.to_string())
+                                                }
+                                            }
+                                        },
+                                        Err(e) => error_message.set(e.to_string()),
+                                    }
                                 },
-                                on_back: move |_| {
-                                    current_step.set(RegisterStep::NameAndEmail);
-                                }
                             }
                         },
                         RegisterStep::EnterPassword => rsx! {
@@ -69,13 +123,32 @@ pub fn Register() -> Element {
                                 password,
                                 confirm_password,
                                 is_loading,
-                                on_next: move |_| {
-                                    // TODO: Send SetPasswordRequest
-                                    current_step.set(RegisterStep::EnterUsername);
+                                on_submit: move |_| async move {
+                                    if password() != confirm_password() {
+                                        error_message.set("Passwords doesn't match".to_string());
+                                    }
+                                    if let Err(e) = shared::validation::is_password_strong(&password()) {
+                                        error_message.set(e.to_string());
+                                    }
+                                    let result = client()
+                                        .post(format!("{}/api/register/set_password", crate::SERVICE_DOMAIN))
+                                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                                        .body(format!(r#"{{"email": "{email}", "password": "{password}"}}"#))
+                                        .send().await;
+                                    match result {
+                                        Ok(v) => {
+                                            if v.status().is_success() {
+                                                current_step.set(RegisterStep::EnterUsername);
+                                            } else {
+                                                match v.text().await {
+                                                    Ok(e) => error_message.set(e),
+                                                    Err(e) => error_message.set(e.to_string())
+                                                }
+                                            }
+                                        },
+                                        Err(e) => error_message.set(e.to_string()),
+                                    }
                                 },
-                                on_back: move |_| {
-                                    current_step.set(RegisterStep::VerifyWithOtp);
-                                }
                             }
                         },
                         RegisterStep::EnterUsername => rsx! {
@@ -83,13 +156,30 @@ pub fn Register() -> Element {
                                 email: email,
                                 username,
                                 is_loading,
-                                on_complete: move |_| {
-                                    // TODO: Send SetUsernameRequest
-                                    // TODO: Redirect to login or dashboard
+                                on_submit: move |_| async move {
+                                    if let Err(e) = shared::validation::is_username_valid(&username()) {
+                                        error_message.set(e.to_string());
+                                    }
+                                    let result = client()
+                                        .post(format!("{}/api/register/set_username", crate::SERVICE_DOMAIN))
+                                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                                        .body(format!(r#"{{"email": "{email}", "username": "{username}"}}"#))
+                                        .send().await;
+                                    match result {
+                                        Ok(v) => {
+                                            if v.status().is_success() {
+                                                router().replace(Route::Login {});
+                                            } else {
+                                                match v.text().await {
+                                                    Ok(e) => error_message.set(e),
+                                                    Err(e) => error_message.set(e.to_string())
+                                                }
+
+                                            }
+                                        },
+                                        Err(e) => error_message.set(e.to_string()),
+                                    }
                                 },
-                                on_back: move |_| {
-                                    current_step.set(RegisterStep::EnterPassword);
-                                }
                             }
                         },
                     }
