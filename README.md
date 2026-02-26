@@ -85,8 +85,16 @@ cargo sqlx prepare --workspace
 
 > For installation use `cargo install dioxus-cli`
 
+For client side rendering, use
+
 ```
-dx serve --server --port 8080
+dx serve --server --port 8080 --bin app-csr
+```
+
+For server side rendering, use
+
+```
+dx serve --server --port 8080 --bin app-ssr
 ```
 
 > Run without dioxus-cli

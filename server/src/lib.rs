@@ -1,13 +1,13 @@
 mod admin;
 mod auth;
-mod connection;
+mod client_socket;
 mod middleware;
 mod settings;
 mod stream_drop;
 mod user;
 mod user_data;
 
-pub use connection::ClientSocket;
+pub use client_socket::ClientSocket;
 
 /// main router for server routes
 pub async fn routes() -> axum::Router {

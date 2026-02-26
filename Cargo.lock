@@ -58,6 +58,7 @@ dependencies = [
  "dioxus",
  "dotenv",
  "server",
+ "shared",
  "tokio",
  "tracing",
  "tracing-subscriber",
